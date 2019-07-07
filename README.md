@@ -20,5 +20,12 @@ network={
 }
 ```
 
-4. Use an IP scanner (such as the "Advanced IP Scanner" for Windows) to scan the network of the Pi. Once you find a device with the special name that you set in step 3, copy down its IP Address. Then use PuTTY to connect to the Pi. 
+4. Use an IP scanner (such as the "Advanced IP Scanner" for Windows) to scan the network of the Pi. Once you find a device with the special name that you set in step 3, copy down its IP Address. Then use PuTTY to connect to the Pi via SSH by changing the `hostname or IP address` field to the one that you found.
+
+5. Run the following commands to start the setup script.
+```
+wget https://raw.githubusercontent.com/longyuxi/2019-genas-china-smart-device/master/setup.sh
+chmod +x ./setup.sh
+./setup.sh
+```
 

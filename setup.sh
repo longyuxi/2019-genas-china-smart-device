@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "This script updates and installs some necessary softwares. At the end, it will report its IP address for SSH"
 
 # Change apt-get source to TUNA
