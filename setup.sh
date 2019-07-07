@@ -4,10 +4,10 @@ echo "This script updates and installs some necessary softwares. At the end, it 
 
 # Change apt-get source to TUNA
 sudo rm /etc/apt/sources.list
-echo "deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main non-free contrib" >> /etc/apt/sources.list
-echo "deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main non-free contrib" >> /etc/apt/sources.list
+echo "deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ stretch main non-free contrib" >> /etc/apt/sources.list
+echo "deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ stretch main non-free contrib" >> /etc/apt/sources.list
 sudo rm /etc/apt/sources.list.d/raspi.list
-echo "deb http://mirrors.tuna.tsinghua.edu.cn/raspberrypi/ buster main" >> /etc/apt/sources.list.d/raspi.list
+echo "deb http://mirrors.tuna.tsinghua.edu.cn/raspberrypi/ stretch main" >> /etc/apt/sources.list.d/raspi.list
 
 # Remove LibreOffice
 sudo apt-get -y remove --purge libreoffice*

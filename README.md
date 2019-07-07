@@ -26,6 +26,6 @@ network={
 ```
 wget https://raw.githubusercontent.com/longyuxi/2019-genas-china-smart-device/master/setup.sh
 chmod +x ./setup.sh
-./setup.sh
+sudo ./setup.sh
 ```
 
