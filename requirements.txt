@@ -1,2 +1,3 @@
 RPi.GPIO
 requests
+adafruit-tcs34725
