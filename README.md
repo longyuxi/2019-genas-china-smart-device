@@ -1,4 +1,8 @@
 # 2019-genas-china-smart-device
+
+List of sensors currently installed:
+- TCS34725 color (RGB) sensor with inaccurate light intensity function
+- DS18B20 temperature sensor
  
 1. Use Etcher to flash Raspbian image to the Pi.
 

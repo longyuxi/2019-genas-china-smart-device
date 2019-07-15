@@ -227,10 +227,10 @@ def heartbeat():
     # global vibrating
     # delta_vibration = last_vibration_time - start_vibration_time
     global msg_period
-    if(seconds_started >= msg_period):
-        send_temperature()
-        seconds_started = 0
-        logging.debug("Temperature sent!")
+    # if(seconds_started >= msg_period):
+    #     send_temperature()
+    #     seconds_started = 0
+    #     logging.debug("Temperature sent!")
     # if (vibrating and delta_vibration > begin_seconds
     #         and not appliance_active):
     #     send_appliance_active_message()
