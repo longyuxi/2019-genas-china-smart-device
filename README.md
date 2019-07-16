@@ -1,5 +1,6 @@
 # 2019-genas-china-smart-device
 
+# To set up the hardware and software
 List of sensors currently installed:
 - TCS34725 color (RGB) sensor with inaccurate light intensity function
 - DS18B20 temperature sensor
@@ -33,3 +34,6 @@ chmod +x ./setup.sh
 sudo ./setup.sh
 ```
 
+# To view the wiring diagram
+
+Download *Fritzing* to open the .fzz file. You possibly need to download the Fritzing parts file for TCS34725.
