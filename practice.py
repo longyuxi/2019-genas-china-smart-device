@@ -1,147 +1,72 @@
+import sys, os, imp, time
 import RPi.GPIO as GPIO
-import time
+import threading
 
-
-## LED
-# Surface LED pins
-RED_LED = 20
-YELLOW_LED = 16
-GREEN_LED = 19
-# Emitter
-BLUELIGHT_EMITTER_LED = 26
-
-## LCD
-# GPIO to LCD mapping
-LCD_RS = 7 # Pi pin 26
-LCD_E = 8 # Pi pin 24
-LCD_D4 = 25 # Pi pin 22
-LCD_D5 = 24 # Pi pin 18
-LCD_D6 = 23 # Pi pin 16
-LCD_D7 = 18 # Pi pin 12
-
-# LCD constants
-LCD_CHR = True # Character mode
-LCD_CMD = False # Command mode
-LCD_CHARS = 16 # Characters per line (16 max)
-LCD_LINE_1 = 0x80 # LCD memory location for 1st line
-LCD_LINE_2 = 0xC0 # LCD memory location 2nd line
-
-# Define main program code
-def main():
- 
- GPIO.setwarnings(False)
- GPIO.setmode(GPIO.BCM) # Use BCM GPIO numbers
- GPIO.setup(LCD_E, GPIO.OUT) # Set GPIO's to output mode
- GPIO.setup(LCD_RS, GPIO.OUT)
- GPIO.setup(LCD_D4, GPIO.OUT)
- GPIO.setup(LCD_D5, GPIO.OUT)
- GPIO.setup(LCD_D6, GPIO.OUT)
- GPIO.setup(LCD_D7, GPIO.OUT)
-
-# Initialize display
- lcd_init()
-
-
- while True:
-    lcd_text("Hello World!",LCD_LINE_1)
-    lcd_text("",LCD_LINE_2)
-
-    lcd_text("Rasbperry Pi",LCD_LINE_1)
-    lcd_text("16x2 LCD Display",LCD_LINE_2)
-
-    time.sleep(3) # 3 second delay
-
-    lcd_text("ABCDEFGHIJKLMNOP",LCD_LINE_1)
-    lcd_text("1234567890123456",LCD_LINE_2)
-
-    time.sleep(3) # 3 second delay
-
-    lcd_text("I love my",LCD_LINE_1)
-    lcd_text("Raspberry Pi!",LCD_LINE_2)
-
-    time.sleep(3)
-
-    lcd_text("MBTechWorks.com",LCD_LINE_1)
-    lcd_text("For more R Pi",LCD_LINE_2)
-
-    time.sleep(3)
-
-# End of main program code
-
-
-# LCD functions
-def lcd_init():
- lcd_write(0x33,LCD_CMD) # Initialize
- lcd_write(0x32,LCD_CMD) # Set to 4-bit mode
- lcd_write(0x06,LCD_CMD) # Cursor move direction
- lcd_write(0x0C,LCD_CMD) # Turn cursor off
- lcd_write(0x28,LCD_CMD) # 2 line display
- lcd_write(0x01,LCD_CMD) # Clear display
- time.sleep(0.0005) # Delay to allow commands to process
-
-def lcd_write(bits, mode):
-# High bits
- GPIO.output(LCD_RS, mode) # RS
-
- GPIO.output(LCD_D4, False)
- GPIO.output(LCD_D5, False)
- GPIO.output(LCD_D6, False)
- GPIO.output(LCD_D7, False)
- if bits&0x10==0x10:
-    GPIO.output(LCD_D4, True)
- if bits&0x20==0x20:
-    GPIO.output(LCD_D5, True)
- if bits&0x40==0x40:
-    GPIO.output(LCD_D6, True)
- if bits&0x80==0x80:
-    GPIO.output(LCD_D7, True)
-
-# Toggle 'Enable' pin
- lcd_toggle_enable()
-
-# Low bits
- GPIO.output(LCD_D4, False)
- GPIO.output(LCD_D5, False)
- GPIO.output(LCD_D6, False)
- GPIO.output(LCD_D7, False)
- if bits&0x01==0x01:
-    GPIO.output(LCD_D4, True)
- if bits&0x02==0x02:
-    GPIO.output(LCD_D5, True)
- if bits&0x04==0x04:
-    GPIO.output(LCD_D6, True)
- if bits&0x08==0x08:
-    GPIO.output(LCD_D7, True)
-
-# Toggle 'Enable' pin
- lcd_toggle_enable()
-
-def lcd_toggle_enable():
- time.sleep(0.0005)
- GPIO.output(LCD_E, True)
- time.sleep(0.0005)
- GPIO.output(LCD_E, False)
- time.sleep(0.0005)
-
-def lcd_text(message,line):
- # Send text to display
- message = message.ljust(LCD_CHARS," ")
-
- lcd_write(line, LCD_CMD)
-
- for i in range(LCD_CHARS):
-    lcd_write(ord(message[i]),LCD_CHR)
-
-
-#Begin program
+# Import LCD
+# home_dir = os.path.expanduser("/home/pi/2019-genas-china-smart-device")
+# lcd_file = os.path.join(home_dir, "LCD1602/lcd.py")
+# lcd = imp.load_source('lcd', lcd_file)
 try:
- main()
- 
-except KeyboardInterrupt:
- pass
- 
-finally:
- lcd_write(0x01, LCD_CMD)
- lcd_text("So long!",LCD_LINE_1)
- lcd_text("MBTechWorks.com",LCD_LINE_2)
- GPIO.cleanup()
+   import lcd
+   lcd.setup()
+   lcd_welcome = threading.Thread(target=lcd.lcd_success_message)
+   lcd_welcome.start()
+except:
+   print("FATAL: LCD IMPORT FAILURE")
+   exit()
+
+# Import TCS34725
+try:
+   
+   # tcs_file = os.path.join(home_dir, "TCS34725/Adafruit_TCS34725.py")
+   # Adafruit_TCS34725 = imp.load_source('TCS34725', tcs_file)
+   import Adafruit_TCS34725
+   import smbus
+   tcs = Adafruit_TCS34725.TCS34725()
+   r, g, b, c = tcs.get_raw_data()
+   lux = Adafruit_TCS34725.calculate_lux(r, g, b)
+   print('Current color in box: red={0} green={1} blue={2} clear={3}. Lux={4}'.format(r, g, b, c, lux))
+   # TCS34725 functions
+   # # Read the R, G, B, C color data.
+   # r, g, b, c = tcs.get_raw_data()
+
+   # # Calculate color temperature using utility functions.  You might also want to
+   # # check out the colormath library for much more complete/accurate color functions.
+   # color_temp = Adafruit_TCS34725.calculate_color_temperature(r, g, b)
+
+   # # Calculate lux with another utility function.
+   # lux = Adafruit_TCS34725.calculate_lux(r, g, b)
+   # lcd.lcd_text('R={0} G={1} B={2} C={3} L={4}'.format(r, g, b, c, lux), lcd.LCD_LINE_2)
+   # time.sleep(1)
+   # lcd.lcd_clear_screen()
+except:
+   lcd.lcd_text("TCS34725 FAIL", lcd.LCD_LINE_2)
+   exit()
+
+# Import LED
+try:
+   import led
+except:
+   lcd.lcd_text("LED FAIL", lcd.LCD_LINE_2)
+   exit()
+
+# Import DS18B20
+try:
+   from w1thermsensor import W1ThermSensor
+   temp_sensor = W1ThermSensor()
+except:
+   lcd.lcd_text("DS18B20 FAIL", lcd.LCD_LINE_2)
+   exit()
+
+# Import TSL2561
+try:
+   import TSL2561
+except:
+   lcd.lcd_text("TSL2561 FAIL", lcd.LCD_LINE_2)
+   exit()
+
+lcd_welcome.join()
+lcd.lcd_text("All OK", lcd.LCD_LINE_1)
+lcd.lcd_text("Lux={0}".format(TSL2561.visibleValue()), lcd.LCD_LINE_2)
+time.sleep(1)
+lcd.lcd_clear_screen()

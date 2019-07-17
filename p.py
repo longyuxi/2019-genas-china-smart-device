@@ -1,3 +1,0 @@
-import practice
-
-practice.main()

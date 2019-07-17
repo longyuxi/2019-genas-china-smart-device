@@ -164,22 +164,20 @@ def lcd_clear_screen():
    lcd_text("", LCD_LINE_2)
 
 def lcd_success_message():
-   lcd_text("Setup Success", LCD_LINE_1)
-   time.sleep(3)
-   lcd_clear_screen()
+   lcd_text("LCD Success", LCD_LINE_1)
+   time.sleep(1)
 
-
-# Begin program
-try:
- main()
+#Begin program
+# try:
+#  main()
  
-except KeyboardInterrupt:
- pass
+# except KeyboardInterrupt:
+#  pass
  
-finally:
- lcd_write(0x01, LCD_CMD)
- lcd_text("So long!",LCD_LINE_1)
- lcd_text("MBTechWorks.com",LCD_LINE_2)
- lcd_text("",LCD_LINE_1)
- lcd_text("",LCD_LINE_2)
- GPIO.cleanup()
+# finally:
+#  lcd_write(0x01, LCD_CMD)
+#  lcd_text("So long!",LCD_LINE_1)
+#  lcd_text("MBTechWorks.com",LCD_LINE_2)
+#  lcd_text("",LCD_LINE_1)
+#  lcd_text("",LCD_LINE_2)
+#  GPIO.cleanup()
