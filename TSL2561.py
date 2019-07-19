@@ -13,6 +13,8 @@ data = bus.read_i2c_block_data(0x39, 0x0C | 0x80, 2)
 data1 = bus.read_i2c_block_data(0x39, 0x0E | 0x80, 2)
 
 def readRaw():
+    global data
+    global data1 
     data = bus.read_i2c_block_data(0x39, 0x0C | 0x80, 2)
     data1 = bus.read_i2c_block_data(0x39, 0x0E | 0x80, 2)
  
@@ -33,3 +35,5 @@ def IRValue():
 
 def visibleValue():
     return fullSpectrumValue() - IRValue()
+
+

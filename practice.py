@@ -67,6 +67,28 @@ except:
 
 lcd_welcome.join()
 lcd.lcd_text("All OK", lcd.LCD_LINE_1)
-lcd.lcd_text("Lux={0}".format(TSL2561.visibleValue()), lcd.LCD_LINE_2)
+lcd.lcd_text("Lux={0},T={1}".format(TSL2561.visibleValue(), temp_sensor.get_temperature()), lcd.LCD_LINE_2)
 time.sleep(1)
 lcd.lcd_clear_screen()
+count = 0
+while True:
+   wifi_name = os.popen('iwgetid -r').read()
+   wifi_name = wifi_name[0:(len(wifi_name)-1)].strip()
+   if(wifi_name == ''):
+      time.sleep(1)
+      count = count + 1
+   elif count > 15:
+      break
+   else:
+      break
+
+if count > 15:
+   lcd.lcd_text("Wi-Fi", lcd.LCD_LINE_1)
+   lcd.lcd_text("Not connected", lcd.LCD_LINE_2)
+else:
+   wifi_name = os.popen('iwgetid -r').read()
+   wifi_name = wifi_name[0:(len(wifi_name)-1)].strip()
+   ipaddr = os.popen('hostname -I').read()
+   ipaddr = ipaddr[0:(len(ipaddr)-1)].strip()
+   lcd.lcd_text(wifi_name, lcd.LCD_LINE_1)
+   lcd.lcd_text(ipaddr, lcd.LCD_LINE_2)
