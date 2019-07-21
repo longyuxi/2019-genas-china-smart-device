@@ -23,6 +23,7 @@ try:
    import Adafruit_TCS34725
    import smbus
    tcs = Adafruit_TCS34725.TCS34725()
+   tcs.set_interrupt(True)
    r, g, b, c = tcs.get_raw_data()
    lux = Adafruit_TCS34725.calculate_lux(r, g, b)
    print('Current color in box: red={0} green={1} blue={2} clear={3}. Lux={4}'.format(r, g, b, c, lux))
@@ -92,3 +93,4 @@ else:
    ipaddr = ipaddr[0:(len(ipaddr)-1)].strip()
    lcd.lcd_text(wifi_name, lcd.LCD_LINE_1)
    lcd.lcd_text(ipaddr, lcd.LCD_LINE_2)
+

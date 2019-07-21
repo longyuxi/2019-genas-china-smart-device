@@ -24,6 +24,7 @@ try:
    import Adafruit_TCS34725
    import smbus
    tcs = Adafruit_TCS34725.TCS34725()
+   tcs.set_interrupt(True)
    r, g, b, c = tcs.get_raw_data()
    lux = Adafruit_TCS34725.calculate_lux(r, g, b)
    print('Current color in box: red={0} green={1} blue={2} clear={3}. Lux={4}'.format(r, g, b, c, lux))
@@ -90,8 +91,10 @@ def prep():
     print("Data file at " + OUTPUT_FILE.name)
     OUTPUT_FILE.write("Concentration,LuxFull,LuxVisible,R,G,B,Temperature\n")
     OUTPUT_FILE.close()
+    writeData(0)
 
 def writeData(concentration):
+    led.emitter(True)
     R, G, B, c = tcs.get_raw_data()
     LuxFull = TSL2561.fullSpectrumValue()
     LuxVisible = TSL2561.visibleValue()
@@ -100,10 +103,10 @@ def writeData(concentration):
     OUTPUT_FILE = open(OUTPUT_FILE_NAME, 'a')
     OUTPUT_FILE.write(line)
     OUTPUT_FILE.close()
+    led.emitter(False)
 
 try:
     prep()
-    writeData(0)
     while True:
         conc = input("Please close the lid, then input the concentration of the next sample. Ctrl + C to quit. \n")
         try:
