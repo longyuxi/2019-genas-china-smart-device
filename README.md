@@ -4,7 +4,15 @@ Startup script checks if all interfaces can be instantiated and print out the cu
 
 *To be written*
 
-# To set up the hardware and software
+# Startup sequence
+The startup script should detect most of the connection problems. Should there be no connection problems, events that would happen when you plug in are as follows:
+- LCD screen prints out "LCD Success".
+- LEDs show a light chasing sequence, then all flash three times.
+- LCD screen prints out "All OK" on first line, "Lux=...,T=..." on second line.
+- As soon as the Pi is connected to the network, LCD screen prints Wi-Fi network name on first line, local IP address on second line (which is the IP address you use to connect to the Pi).
+Allow 30 seconds before the Pi starts the startup sequence above. Should the startup not abide to the sequence above, the LCD should print out the error (if the LCD is working in the first place). Refer to the "Errors" section below for more information.
+
+# Setting up the hardware and software
 List of sensors currently installed:
 - TCS34725 color (RGB) sensor with inaccurate light intensity function
 - DS18B20 temperature sensor
@@ -56,3 +64,9 @@ Currently, in order to log the data, you have to SSH into the Pi and run a Pytho
 6. Repeat from step 3. When you are done, hit *CTRL + C* on your keyboard to exit the program.
 
 The file is automatically saved every time you press ENTER, so no worries if the power goes out.
+
+# Errors
+1. **There is no output on LCD**: There is probably a connection problem between the Pi and the LCD. Refer to the wiring diagram to correct the connection. If there is no problem in connection, there might be a problem auto-executing the script. Make sure you have followed all the steps in the setup section above.
+2. **TCS34725 FAIL, LED FAIL, DS18B20 FAIL, TSL2561 FAIL or Emitter FAIL**: Refer to the wiring diagram to correct the wiring.
+3. **Wi-Fi not connected**: Make sure you are in range of the Wi-Fi adapter. The wireless adapter on the Raspberry Pi might be less powerful than your computer or phone's Wi-Fi adapter.
+

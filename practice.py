@@ -2,6 +2,10 @@ import sys, os, imp, time
 import RPi.GPIO as GPIO
 import threading
 
+# The threshold used to confirm that blue light emitters are connected. 
+# Set to be half of expected value when on.
+EMITTER_THRESHOLD_LUX = 1000 
+
 # Import LCD
 # home_dir = os.path.expanduser("/home/pi/2019-genas-china-smart-device")
 # lcd_file = os.path.join(home_dir, "LCD1602/lcd.py")
@@ -66,7 +70,24 @@ except:
    lcd.lcd_text("TSL2561 FAIL", lcd.LCD_LINE_2)
    exit()
 
+def testEmitter():
+   led.emitter(True)
+   blankValue = TSL2561.visibleValue()
+   time.sleep(1)
+   coloredValue = TSL2561.visibleValue()
+   if (coloredValue - blankValue) < EMITTER_THRESHOLD_LUX:
+      # Emitter not connected4
+      lcd.lcd_text("Emitter FAIL", lcd.LCD_LINE_1)
+      sys.exit()
+   else:
+      led.emitter(False)
+      return
+   
+
 lcd_welcome.join()
+emitterTest = threading.Thread(target=testEmitter)
+emitterTest.start()
+emitterTest.join()
 lcd.lcd_text("All OK", lcd.LCD_LINE_1)
 lcd.lcd_text("Lux={0},T={1}".format(TSL2561.visibleValue(), temp_sensor.get_temperature()), lcd.LCD_LINE_2)
 time.sleep(1)
@@ -93,4 +114,3 @@ else:
    ipaddr = ipaddr[0:(len(ipaddr)-1)].strip()
    lcd.lcd_text(wifi_name, lcd.LCD_LINE_1)
    lcd.lcd_text(ipaddr, lcd.LCD_LINE_2)
-

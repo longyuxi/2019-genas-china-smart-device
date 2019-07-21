@@ -95,9 +95,11 @@ def prep():
 
 def writeData(concentration):
     led.emitter(True)
+    time.sleep(1) # To wait for I2C Bus to update
     R, G, B, c = tcs.get_raw_data()
     LuxFull = TSL2561.fullSpectrumValue()
     LuxVisible = TSL2561.visibleValue()
+    print(LuxVisible)
     Temperature = temp_sensor.get_temperature()
     line = str(concentration) + "," + str(LuxFull) + "," + str(LuxVisible) + "," + str(R) + "," + str(G) + "," + str(B) + "," + str(Temperature) + "\n"
     OUTPUT_FILE = open(OUTPUT_FILE_NAME, 'a')
@@ -113,8 +115,6 @@ try:
             writeData(conc)
         except:
             print("Data not written successfully. Try again. \n")
-
- 
 except KeyboardInterrupt:
     print("Exit")
 finally:
