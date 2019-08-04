@@ -1,8 +1,17 @@
 # Features
-
 Startup script checks if all interfaces can be instantiated and print out the currently connected Wi-Fi network and its IP address for easy SSH.
 
-*To be written*
+# Design diagrams
+[1](https://33b68295032b152c.share.mingdao.net/apps/kcshare/5d46bb28eb60f43138261e44)
+[2](https://33b68295032b152c.share.mingdao.net/apps/kcshare/5d46bb28eb60f43138261e44)
+[3](https://33b68295032b152c.share.mingdao.net/apps/kcshare/5d46bb2aeb60f43bcc77df6b)
+
+# User mode (model still under development)
+## To enter user mode
+Push the button when the LCD displays the Wi-Fi information. From there you can use the appliance to get concentration data from samples based on previous models (which are to be built).
+
+## To use user mode
+Put in your sample when the screen prompts you to. After you put in the sample, push the button and the machine will start analyzing it. When it is done analyzing, the measured concentration level will be printed out on the LCD screen and one of the LEDs (green, yellow, red) will light up to indicate the status of your sample (good, worse, bad). Then when you are done viewing the results of this sample, push the button again and start over from the beginning of this paragraph.
 
 # Startup sequence
 The startup script should detect most of the connection problems. Should there be no connection problems, events that would happen when you plug in are as follows:
@@ -10,6 +19,7 @@ The startup script should detect most of the connection problems. Should there b
 - LEDs show a light chasing sequence, then all flash three times.
 - LCD screen prints out "All OK" on first line, "Lux=...,T=..." on second line.
 - As soon as the Pi is connected to the network, LCD screen prints Wi-Fi network name on first line, local IP address on second line (which is the IP address you use to connect to the Pi).
+
 Allow 30 seconds before the Pi starts the startup sequence above. Should the startup not abide to the sequence above, the LCD should print out the error (if the LCD is working in the first place). Refer to the "Errors" section below for more information.
 
 # Setting up the hardware and software

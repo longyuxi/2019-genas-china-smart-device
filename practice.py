@@ -2,6 +2,30 @@ import sys, os, imp, time
 import RPi.GPIO as GPIO
 import threading
 
+GPIO.setmode(GPIO.BCM)
+
+# # TODO a function that returns the detected particle concentration
+# based on measurement data and mathematic model, possibly requires import of .mdl
+# Currently a dummy function. 
+def get_detected_level():
+   return TSL2561.fullSpectrumValue()
+
+# TODO a function that reports detected level visually, viz. via LCD, LED
+def report_result():
+   result = get_detected_level()
+   lcd.lcd_clear_screen()
+   lcd.lcd_text(str(result), lcd.LCD_LINE_1)
+
+# Pin to which the button to enter user mode is connected
+PUSH_BUTTON_PIN = 21
+GPIO.setup(PUSH_BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+usermode = False
+def enter_user_mode(channel):
+   global usermode
+   usermode = True
+GPIO.add_event_detect(PUSH_BUTTON_PIN, GPIO.RISING, callback=enter_user_mode, bouncetime=200)
+
+
 # The threshold used to confirm that blue light emitters are connected. 
 # Set to be half of expected value when on.
 EMITTER_THRESHOLD_LUX = 1000 
@@ -92,26 +116,61 @@ led.emitter(False)
 lcd.lcd_text("All OK", lcd.LCD_LINE_1)
 lcd.lcd_text("Lux={0},T={1}".format(TSL2561.visibleValue(), temp_sensor.get_temperature()), lcd.LCD_LINE_2)
 time.sleep(1)
-lcd.lcd_clear_screen()
-count = 0
-while True:
-   wifi_name = os.popen('iwgetid -r').read()
-   wifi_name = wifi_name[0:(len(wifi_name)-1)].strip()
-   if(wifi_name == ''):
-      time.sleep(1)
-      count = count + 1
-   elif count > 15:
-      break
-   else:
-      break
 
-if count > 15:
-   lcd.lcd_text("Wi-Fi", lcd.LCD_LINE_1)
-   lcd.lcd_text("Not connected", lcd.LCD_LINE_2)
-else:
-   wifi_name = os.popen('iwgetid -r').read()
-   wifi_name = wifi_name[0:(len(wifi_name)-1)].strip()
-   ipaddr = os.popen('hostname -I').read()
-   ipaddr = ipaddr[0:(len(ipaddr)-1)].strip()
-   lcd.lcd_text(wifi_name, lcd.LCD_LINE_1)
-   lcd.lcd_text(ipaddr, lcd.LCD_LINE_2)
+# Print out Wi-Fi SSID and local IP address if connected
+lcd.lcd_clear_screen()
+
+# Tries to connect to Wi-Fi and print out 
+# information only when not in usermode yet
+if not usermode:
+   count = 0
+   while True:
+      wifi_name = os.popen('iwgetid -r').read()
+      wifi_name = wifi_name[0:(len(wifi_name)-1)].strip()
+      if(wifi_name == ''):
+         time.sleep(1)
+         count = count + 1
+      elif count > 15:
+         break
+      else:
+         break
+
+   if count > 15:
+      lcd.lcd_text("Wi-Fi", lcd.LCD_LINE_1)
+      lcd.lcd_text("Not connected", lcd.LCD_LINE_2)
+   else:
+      wifi_name = os.popen('iwgetid -r').read()
+      wifi_name = wifi_name[0:(len(wifi_name)-1)].strip()
+      ipaddr = os.popen('hostname -I').read()
+      ipaddr = ipaddr[0:(len(ipaddr)-1)].strip()
+      lcd.lcd_text(wifi_name, lcd.LCD_LINE_1)
+      lcd.lcd_text(ipaddr, lcd.LCD_LINE_2)
+
+tick = 0
+while True:
+   if usermode:
+      break
+   if tick > 15:
+      sys.exit() # Exit program if user did not specify usermode in 15 seconds
+   tick = tick + 1
+   time.sleep(1)
+
+# Usermode now
+lcd.lcd_clear_screen()
+lcd.lcd_text('User Mode', lcd.LCD_LINE_1)
+GPIO.remove_event_detect(PUSH_BUTTON_PIN)
+time.sleep(1)
+
+while True:
+   GPIO.output(led.WHITE_LED_PIN, True)
+   lcd.lcd_clear_screen()
+   lcd.lcd_text('Put in sample', lcd.LCD_LINE_1)
+   lcd.lcd_text('Push btn on done', lcd.LCD_LINE_2)
+   GPIO.wait_for_edge(PUSH_BUTTON_PIN, GPIO.RISING)
+   GPIO.output(led.WHITE_LED_PIN, False)
+   threading.Thread(target=led.blink_led, args=(led.BLUE_LED_PIN, 0.3, 0.3,)).start()
+   lcd.lcd_clear_screen()
+   lcd.lcd_text('Detecting', lcd.LCD_LINE_1)
+   report_result()
+   led.stop_blinking()
+   GPIO.wait_for_edge(PUSH_BUTTON_PIN, GPIO.RISING)
