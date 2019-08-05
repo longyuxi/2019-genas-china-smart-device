@@ -8,13 +8,17 @@ GPIO.setmode(GPIO.BCM)
 # based on measurement data and mathematic model, possibly requires import of .mdl
 # Currently a dummy function. 
 def get_detected_level():
-   return TSL2561.fullSpectrumValue()
+   led.emitter(True)
+   time.sleep(1)
+   res = TSL2561.fullSpectrumValue()
+   return res
 
 # TODO a function that reports detected level visually, viz. via LCD, LED
 def report_result():
    result = get_detected_level()
    lcd.lcd_clear_screen()
-   lcd.lcd_text(str(result), lcd.LCD_LINE_1)
+   lcd.lcd_text('Lux = ', lcd.LCD_LINE_1)
+   lcd.lcd_text(str(result), lcd.LCD_LINE_2)
 
 # Pin to which the button to enter user mode is connected
 PUSH_BUTTON_PIN = 21
