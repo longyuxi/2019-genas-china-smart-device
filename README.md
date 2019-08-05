@@ -2,9 +2,13 @@
 # Features
 ## Introduction
 Welcome to the hardware for 2019 iGEM team GENAS_China. Our team aims at creating a modular way to detect the concentration of certain small molecules in the human body as disease indicators. The hardware appliance is to be used in couple with our detection liquid based on a genetically modified strand of the *E. Coli* O157. For a detailed description on our project, check us out on the [iGEM website](https://2019.igem.org/Team:GENAS_China/Description) (still under construction) or the [CCiC compliant preview website](https://genas-china.onrender.com/).
+
 Although our aim is that the user can directly see the danger level of the molecule (as indicated by the liquid turning into different colors), the hardware is meant to quanitfy the concentration level as well as complementing the previous method when determing the danger of a certain molecule requires more precision than the previous method can offer. 
+
 The intuition behind the hardware is that the blue lights emitted from the bottom of the box pass through the sample liquid on a piece of translucent paper and excite the flourescent protein in the sample. The light is then received by a light intensity sensor, on which there is an ochre-colored filter, so that the level of excited flourescent light can be measured. The light is also received by an unfiltered color sensor, so that the color of the light can be measured. The measurements are then correlated with a pre-built math model to determine the concentration and mix formula of expressed flourescent protein, which is then used to find out the concentration level of the certain particle.
+
 The current protoype is based on a Raspberry 3 Pi B+, but can be produced on a Pi Zero too, which cuts the cost of manufacturing to less than $30.
+
 Startup script checks if all interfaces can be instantiated and print out the currently connected Wi-Fi network and its IP address for easy SSH for the developer. Should the user decide that he/she wants to enter the user mode, which outputs the measured concnetraion based on sample, he/she needs to push the button after the first LCD message.
 
 ## List of sensors currently installed:
