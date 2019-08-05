@@ -29,6 +29,7 @@ Push the button when the LCD displays the Wi-Fi information. From there you can 
 Put in your sample when the screen prompts you to. After you put in the sample, push the button and the machine will start analyzing it. When it is done analyzing, the measured concentration level will be printed out on the LCD screen and one of the LEDs (green, yellow, red) will light up to indicate the status of your sample (good, worse, bad). Then when you are done viewing the results of this sample, push the button again and start over from the beginning of this paragraph.
 
 # Startup sequence
+To run the startup script, type `sudo python practice.py` in the terminal when in this directory.
 The startup script should detect most of the connection problems. Should there be no connection problems, events that would happen when you plug in are as follows:
 - LCD screen prints out "LCD Success".
 - LEDs show a light chasing sequence, then all flash three times.
